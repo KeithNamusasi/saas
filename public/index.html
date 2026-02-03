@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro-POS - Inventory & Sales Tracker for Small Businesses</title>
+  <meta name="description" content="Affordable SaaS solution for small businesses to manage inventory, track sales, and receive low-stock alerts via WhatsApp.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <style>
+    /* Landing Page Specific Styles */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: var(--space-lg);
+      animation: slideInUp 0.8s ease-out;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: slideInUp 0.8s ease-out 0.2s backwards;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: var(--space-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: slideInUp 0.8s ease-out 0.4s backwards;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-xl);
+      margin-top: var(--space-2xl);
+    }
+    
+    .feature-card {
+      background: var(--bg-secondary);
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      border: 2px solid var(--bg-tertiary);
+      transition: all var(--transition-base);
+    }
+    
+    .feature-card:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-lg);
+      display: block;
+    }
+    
+    .pricing-card {
+      background: var(--bg-secondary);
+      padding: var(--space-2xl);
+      border-radius: var(--radius-xl);
+      text-align: center;
+      border: 3px solid var(--primary-color);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .pricing-amount {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    footer {
+      background: var(--bg-secondary);
+      padding: var(--space-2xl) 0;
+      text-align: center;
+      border-top: 1px solid var(--bg-tertiary);
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .hero-cta {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Micro-POS</h1>
+        <p class="hero-subtitle">
+          Inventory & Sales Tracker for Small Businesses. 
+          Manage stock, track sales, and get WhatsApp alerts when inventory runs low.
+        </p>
+        <div class="hero-cta">
+          <a href="/auth/signup.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+            Create Free Account
+          </a>
+          <a href="/auth/login.html" class="btn btn-outline" style="font-size: 1.1rem; padding: 1rem 2rem;">
+            Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Features Section -->
+  <section class="section" style="background: var(--bg-primary);">
+    <div class="container">
+      <h2 class="text-center" style="margin-bottom: var(--space-2xl);">Everything You Need</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-box"></i></span>
+          <h3>Product Management</h3>
+          <p>Add products with buying/selling prices, track stock levels, and set low-stock thresholds.</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-sack-dollar"></i></span>
+          <h3>Sales Tracking</h3>
+          <p>Record sales instantly. Automatic stock updates, profit calculations, and sales history.</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-chart-column"></i></span>
+          <h3>Daily Reports</h3>
+          <p>View daily sales totals, profits, and items sold. Track your business performance.</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></span>
+          <h3>WhatsApp Alerts</h3>
+          <p>Get instant WhatsApp notifications when products are running low or out of stock.</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-lock"></i></span>
+          <h3>Secure & Private</h3>
+          <p>Your business data is completely isolated and secure. No one else can access it.</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></span>
+          <h3>Mobile Friendly</h3>
+          <p>Works perfectly on your phone or computer. Manage your shop from anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Pricing Section -->
+  <section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+      <h2 class="text-center" style="margin-bottom: var(--space-2xl);">Free Plan</h2>
+
+      <div style="max-width: 500px; margin: 0 auto;">
+        <div class="pricing-card">
+          <div class="badge badge-success" style="margin-bottom: var(--space-lg);">Free Forever</div>
+          <div class="pricing-amount">KES 0</div>
+          <p style="color: var(--text-muted); margin-bottom: var(--space-xl);">no subscription required</p>
+
+          <ul style="text-align: left; margin-bottom: var(--space-xl); list-style: none;">
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> Unlimited products</li>
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> Unlimited sales tracking</li>
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> WhatsApp low-stock alerts</li>
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> Daily sales reports</li>
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> Mobile & desktop access</li>
+            <li style="margin-bottom: var(--space-md);"><i class="fa-solid fa-circle-check"></i> Secure data protection</li>
+          </ul>
+
+          <a href="/auth/signup.html" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">
+            Create Free Account
+          </a>
+
+          <p style="margin-top: var(--space-lg); font-size: 0.875rem; color: var(--text-muted);">
+            No payments. No contracts.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Section -->
+  <section class="section" style="background: var(--bg-primary);">
+    <div class="container text-center">
+      <h2 style="margin-bottom: var(--space-lg);">Ready to Modernize Your Business?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: var(--space-2xl); max-width: 600px; margin-left: auto; margin-right: auto;">
+        Join hundreds of small businesses already managing their inventory with Micro-POS.
+      </p>
+      <a href="/auth/signup.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+        Get Started Now - Free for 7 Days
+      </a>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p style="color: var(--text-muted); margin-bottom: 0;">
+        &copy; 2026 Micro-POS. All rights reserved.
+      </p>
+    </div>
+  </footer>
+  
+</body>
+</html>

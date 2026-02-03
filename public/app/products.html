@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Micro-POS</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        /* Same navbar styles as dashboard */
+        body {
+            background: var(--bg-primary);
+        }
+
+        .navbar {
+            background: var(--bg-secondary);
+            padding: var(--space-lg);
+            border-bottom: 2px solid var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: color var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-light);
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .search-field {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-field i {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding-left: 2.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body class="app-theme">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Micro-POS</div>
+            <div class="nav-menu">
+                <a href="./dashboard.html" class="nav-link">Dashboard</a>
+                <a href="./products.html" class="nav-link active">Products</a>
+                <a href="./sales.html" class="nav-link">Record Sale</a>
+                <a href="./reports.html" class="nav-link">Reports</a>
+                <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.5rem 1rem;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+            <div>
+                <h1 style="margin-bottom: var(--space-sm);">Product Inventory</h1>
+                <p style="color: var(--text-muted); margin: 0;">Manage your products and stock levels</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.openAddProductModal()">
+                <i class="fa-solid fa-plus"></i> Add Product
+            </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <div class="search-field">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" class="form-input search-input" placeholder="Search products...">
+            </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="card">
+            <div id="productsList">
+                <p style="color: var(--text-muted); text-align: center; padding: var(--space-xl);">
+                    Loading products...
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Product</h2>
+            </div>
+
+            <form id="productForm">
+                <input type="hidden" id="productId">
+
+                <div class="form-group">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input type="text" id="productName" class="form-input" placeholder="e.g., Sugar 2kg" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="buyingPrice" class="form-label">Buying Price (KES)</label>
+                    <input type="number" id="buyingPrice" class="form-input" placeholder="0.00" step="0.01" min="0"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sellingPrice" class="form-label">Selling Price (KES)</label>
+                    <input type="number" id="sellingPrice" class="form-input" placeholder="0.00" step="0.01" min="0"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="stockQuantity" class="form-label">Stock Quantity</label>
+                    <input type="number" id="stockQuantity" class="form-input" placeholder="0" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lowStockThreshold" class="form-label">Low Stock Threshold</label>
+                    <input type="number" id="lowStockThreshold" class="form-input" placeholder="5" min="0" required>
+                    <small style="color: var(--text-muted); font-size: 0.75rem;">
+                        You'll get WhatsApp alert when stock reaches this level
+                    </small>
+                </div>
+
+                <div style="display: flex; gap: var(--space-md); margin-top: var(--space-xl);">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        Save Product
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.closeProductModal()"
+                        style="flex: 1;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase & Modules -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { getUserOrRedirect, logout } from '../js/auth.js';
+        import { getProducts, addProduct, updateProduct, renderProducts } from '../js/products.js';
+        import { showLoading, hideLoading, showToast } from '../js/supabase-client.js';
+
+        let currentUser = null;
+        let allProducts = [];
+
+        // Initialize page
+        async function init() {
+            currentUser = await getUserOrRedirect();
+            if (!currentUser) return;
+
+            // Load products
+            try {
+                allProducts = await getProducts(currentUser);
+                renderProducts(allProducts);
+            } catch (error) {
+                document.getElementById('productsList').innerHTML =
+                    '<p style="color: var(--danger); text-align: center;">Error loading products</p>';
+            }
+        }
+
+        // Global logout for navbar
+        window.handleLogout = logout;
+
+        // Search logic
+        document.getElementById('searchInput')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = allProducts.filter(p => p.product_name.toLowerCase().includes(query));
+            renderProducts(filtered);
+        });
+
+        // Form submission
+        document.getElementById('productForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productId = document.getElementById('productId').value;
+            const productName = document.getElementById('productName').value;
+            const buyingPrice = document.getElementById('buyingPrice').value;
+            const sellingPrice = document.getElementById('sellingPrice').value;
+            const stockQuantity = document.getElementById('stockQuantity').value;
+            const lowStockThreshold = document.getElementById('lowStockThreshold').value;
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            // Basic validation
+            if (!productName || !buyingPrice || !sellingPrice || !stockQuantity) {
+                showToast('Please fill in all required fields.', 'warning');
+                return;
+            }
+
+            const productData = {
+                name: productName,
+                buy_price: parseFloat(buyingPrice),
+                sell_price: parseFloat(sellingPrice),
+                stock_qty: parseInt(stockQuantity),
+                low_stock_level: parseInt(lowStockThreshold || 0)
+            };
+
+            showLoading(submitBtn);
+
+            try {
+                if (productId) {
+                    await updateProduct(currentUser, productId, productData);
+                    showToast('Product updated!', 'success');
+                } else {
+                    await addProduct(currentUser, productData);
+                    showToast('Product added!', 'success');
+                }
+
+                // Refresh list
+                allProducts = await getProducts(currentUser);
+                renderProducts(allProducts);
+                window.closeProductModal();
+            } catch (error) {
+                showToast(error.message, 'danger');
+            } finally {
+                hideLoading(submitBtn);
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') {
+                window.closeProductModal();
+            }
+        });
+
+        // Run init
+        init();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Sale - Micro-POS</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        body {
+            background: var(--bg-primary);
+        }
+
+        .navbar {
+            background: var(--bg-secondary);
+            padding: var(--space-lg);
+            border-bottom: 2px solid var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: color var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-light);
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .sale-preview {
+            background: var(--bg-tertiary);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+        }
+    </style>
+</head>
+
+<body class="app-theme">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Micro-POS</div>
+            <div class="nav-menu">
+                <a href="./dashboard.html" class="nav-link">Dashboard</a>
+                <a href="./products.html" class="nav-link">Products</a>
+                <a href="./sales.html" class="nav-link active">Record Sale</a>
+                <a href="./reports.html" class="nav-link">Reports</a>
+                <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.5rem 1rem;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div style="margin-bottom: var(--space-xl);">
+                <h1 style="margin-bottom: var(--space-sm);"><i class="fa-solid fa-sack-dollar"></i> Record Sale</h1>
+            <p style="color: var(--text-muted); margin: 0;">Record a new sale and update inventory automatically</p>
+        </div>
+
+        <div style="max-width: 600px;">
+            <div class="card">
+                <form id="saleForm">
+
+                    <div class="form-group">
+                        <label for="productSelect" class="form-label">Select Product</label>
+                        <select id="productSelect" class="form-select" required>
+                            <option value="">-- Select a product --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" id="quantity" class="form-input" placeholder="1" min="1" required>
+                        <small id="stockInfo" style="color: var(--text-muted); font-size: 0.75rem;"></small>
+                    </div>
+
+                    <!-- Sale Preview -->
+                    <div id="salePreview" class="sale-preview hidden">
+                        <h4 style="margin-bottom: var(--space-md);">Sale Summary</h4>
+
+                        <div class="preview-row">
+                            <span style="color: var(--text-secondary);">Unit Price:</span>
+                            <strong id="previewUnitPrice">KES 0</strong>
+                        </div>
+
+                        <div class="preview-row">
+                            <span style="color: var(--text-secondary);">Quantity:</span>
+                            <strong id="previewQuantity">0</strong>
+                        </div>
+
+                        <div class="preview-row"
+                            style="border-top: 2px solid var(--bg-secondary); padding-top: var(--space-md); margin-top: var(--space-md);">
+                            <span style="color: var(--text-primary); font-size: 1.1rem;">Total Amount:</span>
+                            <strong id="previewTotal" style="color: var(--success); font-size: 1.25rem;">KES 0</strong>
+                        </div>
+
+                        <div class="preview-row">
+                            <span style="color: var(--text-primary);">Profit:</span>
+                            <strong id="previewProfit" style="color: var(--success);">KES 0</strong>
+                        </div>
+                    </div>
+
+                    <div id="errorMessage" class="alert alert-danger hidden"></div>
+
+
+                    <button type="submit" id="recordSaleBtn" class="btn btn-success"
+                        style="width: 100%; margin-top: var(--space-sm); font-size: 1.1rem;">
+                        <i class="fa-solid fa-circle-check"></i> Record Sale
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Supabase & Modules -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { getUserOrRedirect, logout } from '../js/auth.js';
+        import { getProductsForSelect, recordSale } from '../js/sales.js';
+        import { supabase, showLoading, hideLoading, showToast } from '../js/supabase-client.js';
+
+        let currentUser = null;
+        let products = [];
+
+        // Initialize page
+        async function init() {
+            currentUser = await getUserOrRedirect();
+            if (!currentUser) return;
+
+            // Load products for dropdown
+            try {
+                const [productsData] = await Promise.all([
+                    getProductsForSelect(currentUser)
+                ]);
+
+                products = productsData;
+
+                const limitInfo = document.getElementById('salesLimitInfo');
+                if (limitInfo) limitInfo.textContent = '';
+
+                const select = document.getElementById('productSelect');
+                select.innerHTML = '<option value="">-- Select a product --</option>';
+
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = `${product.name} (Stock: ${product.stock_qty})`;
+                    option.dataset.product = JSON.stringify(product);
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Init error:', error);
+            }
+        }
+
+        // Global logout
+        window.handleLogout = logout;
+
+        // Update preview logic
+        function updateSalePreview() {
+            const select = document.getElementById('productSelect');
+            const quantityInput = document.getElementById('quantity');
+            const quantity = parseInt(quantityInput.value) || 0;
+            const preview = document.getElementById('salePreview');
+            const stockInfo = document.getElementById('stockInfo');
+
+            if (!select.value || quantity === 0) {
+                preview.classList.add('hidden');
+                stockInfo.textContent = '';
+                return;
+            }
+
+            const product = JSON.parse(select.options[select.selectedIndex].dataset.product);
+
+            if (quantity > product.stock_qty) {
+                stockInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Insufficient stock! Only ${product.stock_qty} available.`;
+                stockInfo.style.color = 'var(--danger)';
+                preview.classList.add('hidden');
+                return;
+            }
+
+            const remaining = product.stock_qty - quantity;
+            stockInfo.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${remaining} units will remain`;
+            stockInfo.style.color = 'var(--success)';
+
+            // Preview totals
+            const unitPrice = parseFloat(product.sell_price);
+            const total = unitPrice * quantity;
+            const profit = (unitPrice - parseFloat(product.buy_price)) * quantity;
+
+            document.getElementById('previewUnitPrice').textContent = `KES ${unitPrice.toFixed(0)}`;
+            document.getElementById('previewQuantity').textContent = quantity;
+            document.getElementById('previewTotal').textContent = `KES ${total.toFixed(0)}`;
+            document.getElementById('previewProfit').textContent = `KES ${profit.toFixed(0)}`;
+
+            preview.classList.remove('hidden');
+        }
+
+        // Event listeners
+        document.getElementById('productSelect')?.addEventListener('change', updateSalePreview);
+        document.getElementById('quantity')?.addEventListener('input', updateSalePreview);
+
+        // Form submission
+        document.getElementById('saleForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.classList.add('hidden');
+
+            const select = document.getElementById('productSelect');
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const product = JSON.parse(select.options[select.selectedIndex].dataset.product);
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            showLoading(submitBtn);
+
+            try {
+                const saleData = {
+                    product_id: product.id,
+                    product_name: product.name,
+                    quantity: quantity,
+                    unit_price: parseFloat(product.sell_price),
+                    total: parseFloat(product.sell_price) * quantity,
+                    total_amount: parseFloat(product.sell_price) * quantity,
+                    profit: (parseFloat(product.sell_price) - parseFloat(product.buy_price)) * quantity,
+                    new_stock: product.stock_qty - quantity
+                };
+
+                const { data: authData } = await supabase.auth.getUser();
+                if (!authData?.user) {
+                    alert('Please login first');
+                    return;
+                }
+                console.log('Logged in user id:', authData.user.id);
+
+                const { error } = await recordSale(authData.user, saleData);
+                if (error) throw error;
+
+                showToast('Sale recorded!', 'success');
+                e.target.reset();
+                document.getElementById('salePreview').classList.add('hidden');
+
+                // Refresh products and limit info
+                await init();
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                hideLoading(submitBtn);
+            }
+        });
+
+        init();
+    </script>
+
+</body>
+
+</html>

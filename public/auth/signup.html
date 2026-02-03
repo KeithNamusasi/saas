@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Micro-POS</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            padding: var(--space-lg);
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            max-width: 450px;
+            width: 100%;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .auth-logo h1 {
+            font-size: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--space-lg);
+            color: var(--text-muted);
+        }
+
+        .trial-badge {
+            background: var(--gradient-success);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: var(--space-lg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h1>Micro-POS</h1>
+                <div class="trial-badge"><i class="fa-solid fa-gift"></i> Free Forever</div>
+                <p style="color: var(--text-muted);">Create your business account</p>
+            </div>
+
+            <div id="errorMessage" class="alert alert-danger hidden"></div>
+            <div id="successMessage" class="alert alert-success hidden"></div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="businessName" class="form-label">Business Name</label>
+                    <input type="text" id="businessName" class="form-input" placeholder="My Shop" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number (for WhatsApp alerts)</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="+254700000000" required>
+                    <small style="color: var(--text-muted); font-size: 0.75rem;">
+                        Include country code (e.g., +254 for Kenya)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required
+                        autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required
+                        autocomplete="new-password" minlength="6">
+                    <small style="color: var(--text-muted); font-size: 0.75rem;">
+                        At least 6 characters
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                        <input type="checkbox" required>
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">
+                            I agree to the Terms of Service and Privacy Policy
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-lg);">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account?
+                <a href="./login.html" style="color: var(--primary-light); font-weight: 600;">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase & Auth Module -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../js/signup-handler.js"></script>
+
+</body>
+
+</html>

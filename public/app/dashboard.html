@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Micro-POS</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        body {
+            background: var(--bg-primary);
+        }
+
+        .navbar {
+            background: var(--bg-secondary);
+            padding: var(--space-lg);
+            border-bottom: 2px solid var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: color var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-light);
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-lg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-2xl);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+        }
+    </style>
+</head>
+
+<body class="app-theme">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">Micro-POS</div>
+            <div class="nav-menu">
+                <a href="./dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="./products.html" class="nav-link">Products</a>
+                <a href="./sales.html" class="nav-link">Record Sale</a>
+                <a href="./reports.html" class="nav-link">Reports</a>
+                <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 0.5rem 1rem;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Business Info -->
+        <div
+            style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-md);">
+            <div>
+                <h1 style="margin-bottom: var(--space-sm);">Welcome, <span id="businessName">...</span>!</h1>
+                <p style="color: var(--text-muted); margin: 0;">Here's your business overview for today</p>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="stat-label">Today's Sales</div>
+                <div class="stat-value">KES <span id="todaySales">0</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Today's Profit</div>
+                <div class="stat-value">KES <span id="todayProfit">0</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Items Sold Today</div>
+                <div class="stat-value"><span id="itemsSold">0</span></div>
+            </div>
+
+            <div class="stat-card warning">
+                <div class="stat-label">Low Stock Items</div>
+                <div class="stat-value"><span id="lowStockCount">0</span></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <a href="./products.html?action=add" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Product</a>
+            <a href="./sales.html" class="btn btn-success"><i class="fa-solid fa-sack-dollar"></i> Record Sale</a>
+            <a href="./products.html" class="btn btn-secondary"><i class="fa-solid fa-box"></i> View Products</a>
+            <a href="./reports.html" class="btn btn-secondary"><i class="fa-solid fa-chart-column"></i> View Reports</a>
+        </div>
+
+        <!-- Low Stock Alerts -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-triangle-exclamation"></i> Low Stock Alerts</h3>
+                <p class="card-subtitle">Products that need restocking</p>
+            </div>
+
+            <div id="lowStockList">
+                <p style="color: var(--text-muted); text-align: center; padding: var(--space-xl);">
+                    Loading...
+                </p>
+            </div>
+        </div>
+
+        <!-- Recent Sales -->
+        <div class="card" style="margin-top: var(--space-xl);">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa-solid fa-chart-line"></i> Recent Sales</h3>
+                <p class="card-subtitle">Your latest transactions</p>
+            </div>
+
+            <div id="recentSalesList">
+                <p style="color: var(--text-muted); text-align: center; padding: var(--space-xl);">
+                    Loading...
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Supabase & Modules -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        import { getUserOrRedirect, logout } from '../js/auth.js';
+        import { getBusinessInfo, getTodayStats, getLowStockAlerts, getRecentSales } from '../js/dashboard.js';
+
+        let currentUser = null;
+
+        /**
+         * Initialize dashboard
+         */
+        async function init() {
+            currentUser = await getUserOrRedirect();
+            if (!currentUser) return;
+
+            // Load data concurrently
+            try {
+                const [business, stats, alerts, sales] = await Promise.all([
+                    getBusinessInfo(currentUser),
+                    getTodayStats(currentUser),
+                    getLowStockAlerts(currentUser),
+                    getRecentSales(currentUser)
+                ]);
+
+                // Update Business Info
+                document.getElementById('businessName').textContent = business.business_name;
+
+                // Update Stats
+                document.getElementById('todaySales').textContent = stats.totalSales.toFixed(0);
+                document.getElementById('todayProfit').textContent = stats.totalProfit.toFixed(0);
+                document.getElementById('itemsSold').textContent = stats.totalItems;
+                document.getElementById('lowStockCount').textContent = alerts.length;
+
+                // Render Alerts
+                renderLowStockAlerts(alerts);
+
+                // Render Sales
+                renderRecentSales(sales);
+
+            } catch (error) {
+                console.error('Dashboard init error:', error);
+            }
+        }
+
+
+        function renderLowStockAlerts(alerts) {
+            const container = document.getElementById('lowStockList');
+            if (alerts.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: var(--space-xl);"><i class="fa-solid fa-circle-check"></i> All products are well stocked!</p>';
+                return;
+            }
+
+            let html = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Product</th><th>Current Stock</th><th>Threshold</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            alerts.forEach(product => {
+                const status = product.stock_qty === 0 ?
+                    '<span class="badge badge-danger">Out of Stock</span>' :
+                    '<span class="badge badge-warning">Low Stock</span>';
+                html += `
+                    <tr>
+                        <td><strong>${product.name}</strong></td>
+                        <td>${product.stock_qty} units</td>
+                        <td>${product.low_stock_level} units</td>
+                        <td>${status}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        function renderRecentSales(sales) {
+            const container = document.getElementById('recentSalesList');
+            if (sales.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: var(--space-xl);">No sales yet. Record your first sale!</p>';
+                return;
+            }
+
+            let html = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Product</th><th>Quantity</th><th>Total</th><th>Profit</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            sales.forEach(sale => {
+                const date = new Date(sale.sale_date);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                html += `
+                    <tr>
+                        <td><strong>${sale.product_name}</strong></td>
+                        <td>${sale.quantity}</td>
+                        <td>KES ${parseFloat(sale.total_amount).toFixed(0)}</td>
+                        <td style="color: var(--success);">KES ${parseFloat(sale.profit).toFixed(0)}</td>
+                        <td style="color: var(--text-muted); font-size: 0.875rem;">${formattedDate}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        }
+
+        // Global logout for navbar
+        window.handleLogout = logout;
+
+        init();
+    </script>
+
+</body>
+
+</html>

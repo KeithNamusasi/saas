@@ -1,0 +1,25 @@
+{
+  "name": "micro-pos-saas",
+  "version": "1.0.0",
+  "description": "Micro-POS - Inventory & Sales Tracker for Small Businesses",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "start": "npx serve public"
+  },
+  "keywords": [
+    "pos",
+    "inventory",
+    "sales",
+    "saas",
+    "small-business"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

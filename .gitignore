@@ -1,3 +1,21 @@
+# Node modules (if any)
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Supabase keys (if you store them locally)
+supabase-client.js
+*.secret.js
+
+# Vercel local files
+.vercel/
+
+# OS files
+.DS_Store
+Thumbs.db
 node_modules/
 .env
 .env.local

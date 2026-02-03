@@ -52,12 +52,12 @@ export async function recordSale(user, sale) {
             {
                 user_id: authUser.id,
                 product_id: sale.product_id,
+                product_name: sale.product_name,
                 quantity: sale.quantity,
-                total: sale.total,
+                unit_price: sale.unit_price,
                 total_amount: sale.total_amount,
                 profit: sale.profit,
-                new_stock: sale.new_stock,
-                sale_date: new Date()
+                sale_date: new Date().toISOString()
             }
         ])
         .select();
